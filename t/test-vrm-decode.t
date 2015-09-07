@@ -1,4 +1,4 @@
-use Test::Most tests => 15;
+use Test::Most tests => 17;
 
 use DateTime;
 use Data::VRM::GB qw/decode_vrm/;
@@ -31,6 +31,9 @@ is(decode_vrm('AA67 AAA')->{end_date}, DateTime->new(year => 2018, month => 2, d
 ok(defined decode_vrm('A1 AAA'), 'A1 AAA should be defined');
 is(decode_vrm('A1 AAA')->{start_date}, DateTime->new(year => 1983, month => 8, day => 1), 'A1 AAA start_date');
 is(decode_vrm('A1 AAA')->{end_date}, DateTime->new(year => 1984, month => 7, day => 31), 'A1 AAA end_date');
+
+is(decode_vrm('Y123 AYX')->{start_date}, DateTime->new(year => 2001, month => 3, day => 1), 'Y123 AYX start_date');
+is(decode_vrm('Y123 AYX')->{end_date}, DateTime->new(year => 2001, month => 8, day => 31), 'Y123 AYX end_date');
 
 ok( ! defined decode_vrm('I2 AAA'), 'I2 AAA should be undef because no "I" prefix plates were issued');
 
