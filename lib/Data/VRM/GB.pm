@@ -14,7 +14,36 @@ sub _normalise_vrm($) {
     $vrm =~ tr/a-z/A-Z/;
     return $vrm;
 }
-my $PREFIX_LOOKUP = {
+
+my $SUFFIX_TABLE = {
+    A => [[1963, 2], [1963, 12]],
+    B => [[1964, 1], [1964, 12]],
+    C => [[1965, 1], [1965, 12]],
+    D => [[1966, 1], [1966, 12]],
+    E => [[1967, 1], [1967, 7]],
+    F => [[1967, 8], [1968, 7]],
+    G => [[1968, 8], [1969, 7]],
+    H => [[1969, 8], [1970, 7]],
+    # No I
+    J => [[1970, 8], [1971, 7]],
+    K => [[1971, 8], [1972, 7]],
+    L => [[1972, 8], [1973, 7]],
+    M => [[1973, 8], [1974, 7]],
+    N => [[1974, 8], [1975, 7]],
+    # No O
+    P => [[1975, 8], [1976, 7]],
+    # No Q
+    R => [[1976, 8], [1977, 7]],
+    S => [[1977, 8], [1978, 7]],
+    T => [[1978, 8], [1979, 7]],
+    # No U
+    V => [[1979, 8], [1980, 7]],
+    W => [[1980, 8], [1981, 7]],
+    X => [[1981, 7], [1982, 7]],
+    Y => [[1982, 8], [1983, 7]],
+};
+
+my $PREFIX_TABLE = {
     A => [[1983, 8], [1984, 7]],
     B => [[1984, 8], [1985, 7]],
     C => [[1985, 8], [1986, 7]],
@@ -55,7 +84,10 @@ sub decode_vrm($) {
         $end_date = DateTime->last_day_of_month(year => $e->year, month => $e->month);
     }
     elsif ($vrm =~ /^([A-Z])[0-9]{1,3}[A-Z]{3}$/) {
-        return _resolve_letter_mark($PREFIX_LOOKUP, $1);
+        return _resolve_letter_mark($PREFIX_TABLE, $1);
+    }
+    elsif ($vrm =~ /^[A-Z]{3}[0-9]{1,3}([A-Z])$/) {
+        return _resolve_letter_mark($SUFFIX_TABLE, $1);
     }
     else {
         # No patterns matched, can't parse this type of VRM

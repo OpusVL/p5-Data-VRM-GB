@@ -1,4 +1,4 @@
-use Test::Most tests => 17;
+use Test::Most tests => 22;
 
 use DateTime;
 use Data::VRM::GB qw/decode_vrm/;
@@ -36,6 +36,16 @@ is(decode_vrm('Y123 AYX')->{start_date}, DateTime->new(year => 2001, month => 3,
 is(decode_vrm('Y123 AYX')->{end_date}, DateTime->new(year => 2001, month => 8, day => 31), 'Y123 AYX end_date');
 
 ok( ! defined decode_vrm('I2 AAA'), 'I2 AAA should be undef because no "I" prefix plates were issued');
+
+# Suffix Marks
+
+ok(defined decode_vrm('AAA 1A'), 'AAA 1A should be defined');
+
+is(decode_vrm('AAA 1A')->{start_date}, DateTime->new(year => 1963, month => 2, day => 1), 'AAA 1A start_date');
+is(decode_vrm('AAA 1A')->{end_date}, DateTime->new(year => 1963, month => 12, day => 31), 'AAA 1A end_date');
+
+is(decode_vrm('AAA 1Y')->{start_date}, DateTime->new(year => 1982, month => 8, day => 1), 'AAA 1Y start_date');
+is(decode_vrm('AAA 1Y')->{end_date}, DateTime->new(year => 1983, month => 7, day => 31), 'AAA 1Y end_date');
 
 # Test handling of unknown formats
 ok( ! defined decode_vrm('RUBB ISH'), 'Passing in RUBB ISH should return undef');
