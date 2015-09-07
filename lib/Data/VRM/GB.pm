@@ -14,6 +14,34 @@ sub _normalise_vrm($) {
     $vrm =~ tr/a-z/A-Z/;
     return $vrm;
 }
+my $PREFIX_LOOKUP = {
+    A => [[1983, 8], [1984, 7]],
+    B => [[1984, 8], [1985, 7]],
+    C => [[1985, 8], [1986, 7]],
+    D => [[1986, 8], [1987, 7]],
+    E => [[1987, 8], [1988, 7]],
+    F => [[1988, 8], [1989, 7]],
+    G => [[1989, 8], [1990, 7]],
+    H => [[1990, 8], [1991, 7]],
+    # There's no I
+    J => [[1991, 8], [1992, 7]],
+    K => [[1992, 8], [1993, 7]],
+    L => [[1993, 8], [1994, 7]],
+    M => [[1994, 8], [1995, 7]],
+    N => [[1995, 8], [1996, 7]],
+    # There's no O
+    P => [[1996, 8], [1997, 7]],
+    # There's no Q
+    R => [[1997, 8], [1998, 7]],
+    S => [[1998, 8], [1999, 2]],
+    T => [[1999, 3], [1999, 8]],
+    # There's no U
+    V => [[1999, 9], [2000, 2]],
+    W => [[2000, 3], [2000, 8]],
+    X => [[2000, 9], [2001, 2]],
+    Y => [[2001, 3], [2001, 8]],
+    # There's no Z
+};
 
 sub decode_vrm($) {
     my ($vrm) = @_;
@@ -26,6 +54,9 @@ sub decode_vrm($) {
         my $e = $start_date->clone->add(months => 5);
         $end_date = DateTime->last_day_of_month(year => $e->year, month => $e->month);
     }
+    elsif ($vrm =~ /^([A-Z])[0-9]{1,3}[A-Z]{3}$/) {
+        return _resolve_letter_mark($PREFIX_LOOKUP, $1);
+    }
     else {
         # No patterns matched, can't parse this type of VRM
         return undef;
@@ -36,7 +67,7 @@ sub decode_vrm($) {
     };
 }
 
-sub _split_age_numbers($) {
+sub _split_age_numbers {
     my ($age_pair) = @_;
     my ($month_id, $year_id) = split(//, $age_pair);
     my $year_tens = ($month_id < 5) ? $month_id : ($month_id - 5);
@@ -45,6 +76,38 @@ sub _split_age_numbers($) {
     my $start_month = ($month_id < 5) ? 3 : 9;
     return ($start_year, $start_month);
 }
+
+sub _start_of_month {
+    return DateTime->new(@_, day => 1);
+}
+
+sub _ym {
+    my ($y, $m) = @_;
+    return (year => $y, month => $m);
+}
+
+sub _resolve_letter_mark {
+    my ($table, $letter) = @_;
+    my $pair = $table->{$letter};
+    return undef unless defined $pair;
+    my ($start_pair, $end_pair) = @$pair;
+    return {
+        start_date => _resolve_start_pair($start_pair),
+        end_date => _resolve_end_pair($end_pair),
+    };
+}
+
+sub _resolve_start_pair($) {
+    my ($pair) = @_;
+    return _start_of_month(_ym(@$pair));
+}
+
+sub _resolve_end_pair($) {
+    my ($pair) = @_;
+    return DateTime->last_day_of_month(_ym(@$pair));
+}
+
+
 
 1;
 
