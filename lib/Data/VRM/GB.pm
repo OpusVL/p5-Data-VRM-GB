@@ -160,7 +160,7 @@ a fenceposting-like error here.
 
     use Data::VRM::GB qw/decode_vrm/;
 
-    my $vd = vrm_data('AB56 RST');
+    my $vd = decode_vrm('AB56 RST');
     $vd->{start_date};
     $vd->{end_date};
 
