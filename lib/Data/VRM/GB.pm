@@ -57,6 +57,10 @@ Data::VRM::GB - Extract data about British vehicle registration marks
 This module allows you to get age information based on a vehicle registration
 mark.
 
+Note you should ignore the time portion of start_date and end_date in any
+comparisons.  The end_date's time portion will be 00:00:00, so be very careful of
+a fenceposting-like error here.
+
 =head1 SYNOPSIS
 
     use Data::VRM::GB qw/decode_vrm/;
