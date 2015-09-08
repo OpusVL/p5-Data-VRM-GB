@@ -6,6 +6,8 @@ use Exporter::Easy (
     OK => [ qw/decode_vrm/ ],
 );
 
+use DateTime;
+
 our $VERSION = '0.01';
 
 sub _normalise_vrm($) {
