@@ -193,11 +193,9 @@ If the registration mark couldn't be decoded to a date, either
 because it's of an unrecognised format or is using a letter prefix that is
 not understood, then it will return undef.
 
-Note you should ignore the time portion of start_date and end_date in any
-comparisons.  The end_date's time portion will be 00:00:00, so be very careful of
-a fenceposting-like error here.
-
-To get around this you can ensure you truncate the DateTime you're comparing with to days too:
+Before comparing these dates with another DateTime, you must ensure you
+truncate your DateTime to the day.  If you have a time portion, you will
+get errors creeping in.
 
     DateTime->compare(
        decode_vrm('AB56 RST')->{end_date},
