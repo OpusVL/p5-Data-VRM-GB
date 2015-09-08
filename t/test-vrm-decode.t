@@ -1,4 +1,4 @@
-use Test::Most tests => 27;
+use Test::Most tests => 29;
 
 use DateTime;
 use Data::VRM::GB qw/decode_vrm/;
@@ -23,7 +23,8 @@ is(decode_vrm('AA65 AAA')->{end_date}, DateTime->new(year => 2016, month => 2, d
 is(decode_vrm('AA67 AAA')->{start_date}, DateTime->new(year => 2017, month => 9, day => 1), 'AA67 AAA start_date');
 is(decode_vrm('AA67 AAA')->{end_date}, DateTime->new(year => 2018, month => 2, day => 28), 'AA67 AAA end_date');
 
-# TODO Will there ever be an 00, 50 or 01 plate?  What will it be if so?
+is(decode_vrm('AA99 AAA')->{start_date}, DateTime->new(year => 2049, month => 9, day => 1), 'AA99 AAA start_date');
+is(decode_vrm('AA99 AAA')->{end_date}, DateTime->new(year => 2050, month => 2, day => 28), 'AA99 AAA end_date');
 
 # It doesn't look like a 01 plate will be issued
 
