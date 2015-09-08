@@ -185,12 +185,13 @@ The API is unstable - we haven't fully decided on the API and return data types 
 
 =head2 decode_vrm
 
-A function which takes a VRM as its first and only argument, and returns a HASHREF with the keys
-C<start_date> and C<end_date>.  Each of those keys has as its value a DateTime object,
-truncated to the 'day'.
+A function which takes a VRM as its first and only argument, and returns a
+HASHREF with the keys C<start_date> and C<end_date>.
+Each of those keys has as its value a DateTime object, truncated to the 'day'.
 
-If the registration mark couldn't be decoded to a date, either because it's of an unrecognised format
-or is using a letter prefix that is not understood, then it will return undef.
+If the registration mark couldn't be decoded to a date, either
+because it's of an unrecognised format or is using a letter prefix that is
+not understood, then it will return undef.
 
 Note you should ignore the time portion of start_date and end_date in any
 comparisons.  The end_date's time portion will be 00:00:00, so be very careful of
@@ -198,7 +199,10 @@ a fenceposting-like error here.
 
 To get around this you can ensure you truncate the DateTime you're comparing with to days too:
 
-    DateTime->compare(decode_vrm('AB56 RST')->{end_date}, $your_dt->truncate(to => 'day'));
+    DateTime->compare(
+       decode_vrm('AB56 RST')->{end_date},
+       $your_dt->truncate(to => 'day')
+    );
 
 
 =head1 COPYRIGHT & LICENSE
