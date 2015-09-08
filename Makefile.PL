@@ -22,7 +22,7 @@ my %WriteMakefileArgs = (
     "DateTime" => 0,
     "Exporter::Easy" => 0
   },
-  "VERSION" => "0.02",
+  "VERSION" => "0.03",
   "test" => {
     "TESTS" => "t/*.t"
   }
