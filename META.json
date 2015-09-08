@@ -49,10 +49,10 @@
    "provides" : {
       "Data::VRM::GB" : {
          "file" : "lib/Data/VRM/GB.pm",
-         "version" : "0.01"
+         "version" : "0.02"
       }
    },
-   "release_status" : "testing",
+   "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
          "web" : "https://github.com/OpusVL/p5-Data-VRM-GB/issues"
@@ -64,6 +64,6 @@
          "web" : "https://github.com/OpusVL/p5-Data-VRM-GB"
       }
    },
-   "version" : "0.01"
+   "version" : "0.02"
 }
 
