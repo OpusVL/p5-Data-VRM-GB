@@ -1,4 +1,4 @@
-use Test::Most tests => 22;
+use Test::Most tests => 27;
 
 use DateTime;
 use Data::VRM::GB qw/decode_vrm/;
@@ -25,6 +25,17 @@ is(decode_vrm('AA67 AAA')->{end_date}, DateTime->new(year => 2018, month => 2, d
 
 # TODO Will there ever be an 00, 50 or 01 plate?  What will it be if so?
 
+# It doesn't look like a 01 plate will be issued
+
+ok( ! defined decode_vrm('AA01 AAA'), "AA01 AAA won't be issued");
+
+# 50 and 00 are edge cases, and will be used in 2050-2051
+
+is(decode_vrm('AA50 AAA')->{start_date}, DateTime->new(year => 2050, month => 3, day => 1), 'AA50 AAA start_date');
+is(decode_vrm('AA50 AAA')->{end_date}, DateTime->new(year => 2050, month => 8, day => 31), 'AA50 AAA end_date');
+
+is(decode_vrm('AA00 AAA')->{start_date}, DateTime->new(year => 2050, month => 9, day => 1), 'AA00 AAA start_date');
+is(decode_vrm('AA00 AAA')->{end_date}, DateTime->new(year => 2051, month => 2, day => 28), 'AA00 AAA end_date');
 
 # Year-prefix Marks
 

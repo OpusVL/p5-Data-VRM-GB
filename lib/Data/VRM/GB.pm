@@ -78,7 +78,9 @@ sub decode_vrm($) {
     my ($vrm) = @_;
     $vrm = _normalise_vrm($vrm);
     if ($vrm =~ /^[A-Z]{2}([0-9]{2})[A-Z]{3}$/) {
+        # The normal case
         my ($start_year, $start_month) = _split_age_numbers($1);
+        return undef unless defined $start_year;
         my $start_date = DateTime->new(year => $start_year, month => $start_month, day => 1);
         my $e = $start_date->clone->add(months => 5);
         my $end_date = DateTime->last_day_of_month(year => $e->year, month => $e->month);
@@ -99,6 +101,18 @@ sub decode_vrm($) {
 
 sub _split_age_numbers {
     my ($age_pair) = @_;
+    # Special cases
+    if ($age_pair eq '50') {
+        return (2050, 3);
+    }
+    elsif ($age_pair eq '00') {
+        return (2050, 9);
+    }
+    elsif ($age_pair eq '01') {
+        return undef;
+    }
+
+    # Usual case
     my ($month_id, $year_id) = split(//, $age_pair);
     my $year_tens = ($month_id < 5) ? $month_id : ($month_id - 5);
     my $year_units = $year_id;
@@ -161,10 +175,6 @@ mark.
 =head1 LIMITATIONS
 
 The API is unstable - we haven't fully decided on the API and return data types yet.
-
-Also I'm not sure about whether the XX01, XX00 or XX50 plates will ever be issued,
-and if so when.  Currently they will return date ranges starting in 2000.
-Perhaps they should return undef instead?
 
 =head1 EXPORTS
 
