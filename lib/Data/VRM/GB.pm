@@ -74,6 +74,11 @@ my $PREFIX_TABLE = {
     # There's no Z
 };
 
+# Apply this to end dates to push the time portion close to midnight the following day,
+# to make the code that bit more tolerant if comparison is done with untruncated DateTime.
+# The recommendation remains that the user should truncate their DateTime before comparing, however.
+my $tolerant_end_date = sub { shift->set(hour => 23, minute => 59, second => 59) };
+
 sub decode_vrm($) {
     my ($vrm) = @_;
     $vrm = _normalise_vrm($vrm);
@@ -86,7 +91,7 @@ sub decode_vrm($) {
         my $end_date = DateTime->last_day_of_month(year => $e->year, month => $e->month);
         return {
             start_date => $start_date,
-            end_date => $end_date,
+            end_date => $end_date->$tolerant_end_date,
         };
     }
     elsif ($vrm =~ /^([A-Z])[0-9]{1,3}[A-Z]{3}$/) {
@@ -137,7 +142,7 @@ sub _resolve_letter_mark {
     my ($start_pair, $end_pair) = @$pair;
     return {
         start_date => _resolve_start_pair($start_pair),
-        end_date => _resolve_end_pair($end_pair),
+        end_date => _resolve_end_pair($end_pair)->$tolerant_end_date,
     };
 }
 
