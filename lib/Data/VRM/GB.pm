@@ -8,7 +8,7 @@ use Exporter::Easy (
 
 use DateTime;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 sub _normalise_vrm($) {
     my ($vrm) = @_;
