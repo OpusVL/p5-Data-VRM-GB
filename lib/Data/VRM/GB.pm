@@ -76,14 +76,16 @@ my $PREFIX_TABLE = {
 
 sub decode_vrm($) {
     my ($vrm) = @_;
-    my $start_date;
-    my $end_date;
     $vrm = _normalise_vrm($vrm);
     if ($vrm =~ /^[A-Z]{2}([0-9]{2})[A-Z]{3}$/) {
         my ($start_year, $start_month) = _split_age_numbers($1);
-        $start_date = DateTime->new(year => $start_year, month => $start_month, day => 1);
+        my $start_date = DateTime->new(year => $start_year, month => $start_month, day => 1);
         my $e = $start_date->clone->add(months => 5);
-        $end_date = DateTime->last_day_of_month(year => $e->year, month => $e->month);
+        my $end_date = DateTime->last_day_of_month(year => $e->year, month => $e->month);
+        return {
+            start_date => $start_date,
+            end_date => $end_date,
+        };
     }
     elsif ($vrm =~ /^([A-Z])[0-9]{1,3}[A-Z]{3}$/) {
         return _resolve_letter_mark($PREFIX_TABLE, $1);
@@ -91,14 +93,8 @@ sub decode_vrm($) {
     elsif ($vrm =~ /^[A-Z]{3}[0-9]{1,3}([A-Z])$/) {
         return _resolve_letter_mark($SUFFIX_TABLE, $1);
     }
-    else {
-        # No patterns matched, can't parse this type of VRM
-        return undef;
-    }
-    return {
-        start_date => $start_date,
-        end_date => $end_date,
-    };
+    # No patterns matched, can't parse this type of VRM
+    return undef;
 }
 
 sub _split_age_numbers {
